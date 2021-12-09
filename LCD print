@@ -1,0 +1,47 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include "util/delay.h"
+
+#define rs PORTB0//RS pin to the PORTB0
+#define rw PORTB1//RW pin to the PORTB1
+#define en PORTB2//E PIN to the PORTB2
+
+void lcd_cmd(unsigned char cmd)//Function to send coammnds to LCD
+{
+	PORTA=cmd;//for command to the lcd
+	PORTB&=~(1<<rs);//clear rs pin to send the command
+	PORTB&=~(1<<rw);//clear rw pin to send the command
+	PORTB|=(1<<en);//set enable
+	_delay_ms(10);
+	PORTB&=~(1<<en);//clear enable
+}
+void lcd_data(unsigned char data)
+{
+	PORTA=data;
+	PORTB|=(1<<rs);//set rs pin to send data
+	PORTB&=~(1<<rw);//clear rw pin to send data
+	PORTB|=(1<<en);//set enable
+	_delay_ms(10);
+	PORTB&=~(1<<en);//clear enable
+}
+
+void lcd_init()//lcd initialization
+{
+	lcd_cmd(0x38);//8 bit mode on
+	lcd_cmd(0x0e);//cursor enable
+	lcd_cmd(0x06);//cursor increment
+	lcd_cmd(0x01);//clear lcd
+	lcd_cmd(0x80);//select 1st row 1st colomn
+}
+int main(void)
+{
+    DDRA=0XFF;
+	DDRB=0XFF;
+	lcd_init();
+    while (1) 
+    {
+		lcd_data('a');
+		_delay_ms(100);
+    }
+}
+
