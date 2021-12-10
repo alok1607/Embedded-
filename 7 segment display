@@ -1,0 +1,20 @@
+
+
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include "util/delay.h"
+
+int main()
+{
+	DDRC=0XFF;//PORT C as output/7 segment connected
+	int i;
+	int arr[10]={0X3F,0X06,0X4F,0X66,0X6D,0X7D,0X07,0X07,0X7F,0X6F};
+	while(1)
+	{
+		for (i=0;i<=10;i++)
+		{
+			PORTC=arr[i];
+			_delay_ms(300);
+		}
+	}
+}
