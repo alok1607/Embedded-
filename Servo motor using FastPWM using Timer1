@@ -1,0 +1,47 @@
+/*
+ * Servomotor_FastPWM_Timer1.c
+ *
+ * Created: 12/21/2021 7:52:21 PM
+ * Author : Alok Joshi
+ */ 
+
+#define F_CPU 1000000UL
+#include <avr/io.h>
+#include "util/delay.h"
+
+
+int main(void)
+{
+    TCCR1A|=(1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);//non-inverted PWM mode
+	TCCR1B|=(1<<WGM13)|(1<<WGM12)|(0<<CS11)|(1<<CS10);//prescalar=1, fast PWM mode
+	
+	ICR1=19999;//fast PWM=50Hz(period=20ms standard)
+	DDRD|=(1<<PD4)|(1<<PD5);//PWM pins as output
+    while (1) 
+    {
+		OCR1A=0;
+		_delay_ms(1000);
+		
+		OCR1A=600;
+		_delay_ms(1000);
+		
+		OCR1A=950;
+		_delay_ms(1000);
+		
+		OCR1A=1425;
+		_delay_ms(1000);
+		
+		OCR1A=1900;
+		_delay_ms(1000);
+		
+		OCR1A=1425;
+		_delay_ms(1000);
+		
+		OCR1A=950;
+		_delay_ms(1000);
+		
+		OCR1A=650;
+		_delay_ms(1000);
+    }
+}
+
